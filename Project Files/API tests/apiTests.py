@@ -1,7 +1,7 @@
 import requests
 
 # Define the URL of your API endpoint
-url = "http://localhost:5000/predict"
+url = "http://34.227.94.72:5000/predict"
 
 # Read the front and back image files
 front_image = open("mgf.JPG", "rb")
@@ -14,4 +14,4 @@ data = {'front_image': front_image, 'back_image': back_image}
 response = requests.post(url, files=data)
 
 # Print the response from the API
-print(response.json())
+print(response.text)

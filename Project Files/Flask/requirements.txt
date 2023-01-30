@@ -1,0 +1,6 @@
+flask
+tensorflow
+Pillow
+numpy
+pandas
+pytesseract

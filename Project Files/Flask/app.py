@@ -8,7 +8,8 @@ import os
 
 app = Flask(__name__)
 
-pathToTesseract = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+#pathToTesseract = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
+pathToTesseract = "/usr/bin/tesseract"
 
 # Read the CSV file into a DataFrame
 df = pd.read_csv('modelProductList.csv')
@@ -31,11 +32,14 @@ def predict():
     front_image = Image.open(request.files['front_image'])
     front_image.save("front_image.png") # save image as png
     front_image = Image.open("front_image.png")
+    #rotate image 270 degrees
+    front_image = front_image.rotate(270)
 
     # Get back input data from the request
     back_image = Image.open(request.files['back_image'])
     back_image.save("back_image.png") # save image as png
     back_image = Image.open("back_image.png")
+    back_image = back_image.rotate(270)
     
     pytesseract.tesseract_cmd = r"pathToTesseract"
     text = pytesseract.image_to_string(front_image)
@@ -46,23 +50,29 @@ def predict():
     # Split the text into a list of words
     words = text.split()
 
+    checker = None
     product = None
+    confidence = 0.0
+    brand = None
+    thc = None
+    cbd = None
+    strain = None
     
     # Iterate over the words with a sliding window
     for i in range(len(words)):
         for j in range(i+1, len(words)+1):
-            product = " ".join(words[i:j])
-            if df[(df['Product'] == product)].empty:
+            checker = " ".join(words[i:j])
+            if df[(df['Product'] == checker)].empty:
                 continue
             else:
                 # Get the rows where the 'Product' column is equal to the word
-                row = df[(df['Product'] == product)]
+                row = df[(df['Product'] == checker)]
                 confidence = 0.99
-                product = row['Product']
-                brand = row['Brand']
-                thc = row['THC']
-                cbd = row['CBD']
-                strain = row['Type']
+                product = row['Product'].values[0]
+                brand = row['Brand'].values[0]
+                thc = row['THC'].values[0]
+                cbd = row['CBD'].values[0]
+                strain = row['Type'].values[0]
     #END OF OCR CODE   
                 
     if product is None:
@@ -84,11 +94,11 @@ def predict():
         # Get the rows where the 'Product' column is equal to the predicted class label
         row = df.loc[df['Product'] == class_label]
 
-        product = row['Product']
-        brand = row['Brand']
-        thc = row['THC']
-        cbd = row['CBD']
-        strain = row['Type']
+        product = row['Product'].values[0]
+        brand = row['Brand'].values[0]
+        thc = row['THC'].values[0]
+        cbd = row['CBD'].values[0]
+        strain = row['Type'].values[0]
     #END OF ML CODE
 
 
@@ -101,5 +111,5 @@ def predict():
                     "cbd": cbd,
                     "strain": strain})
     
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', debug=True)
