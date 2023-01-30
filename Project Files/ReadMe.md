@@ -6,6 +6,8 @@ Flask - This holds the code for the Flask API which is hosted on an AWS EC2 inst
 
 Text Scanner Tests - All the code we used to test the functionality of Tesseract-OCR
 
+data demo - sample data that we used to train our CNN
+
 images - Test images
 
 model - The Jupyter Notebook code used to make our CNN
