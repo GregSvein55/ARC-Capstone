@@ -4,7 +4,7 @@ from PIL import Image
 import numpy as np
 import pandas as pd
 import pytesseract
-import os
+import cv2
 
 app = Flask(__name__)
 
@@ -41,7 +41,7 @@ def predict():
     back_image = Image.open("back_image.png")
     back_image = back_image.rotate(270)
     
-    pytesseract.tesseract_cmd = r"pathToTesseract"
+    pytesseract.tesseract_cmd = pathToTesseract
     text = pytesseract.image_to_string(front_image)
 
     # Read the CSV file into a DataFrame
@@ -74,10 +74,22 @@ def predict():
                 cbd = row['CBD'].values[0]
                 strain = row['Type'].values[0]
     #END OF OCR CODE   
-                
+                 
     if product is None:
-        # Perform inference on front image
-        input_data_front = np.array(front_image).reshape(1, input_details[0]['shape'][1], input_details[0]['shape'][2], input_details[0]['shape'][3])
+        
+        front_image = cv2.imread("front_image.png")
+        # Images sent to the CNN must be rotated 90 degrees counter-clockwise as
+        # the data set it was trained on was rotated 90 degrees counter-clockwise
+        front_image = cv2.rotate(front_image, cv2.ROTATE_90_COUNTERCLOCKWISE)
+        
+        #resizing image
+        front_image = cv2.resize(front_image, (1008, 756))
+        
+        # Normalize the pixel values
+        front_image = front_image / 255.0
+        
+        #perform inference
+        input_data_front = np.array(front_image).reshape(1, 756, 1008, 3).astype(np.float32)
         interpreter_front.set_tensor(input_details[0]['index'], input_data_front)
         interpreter_front.invoke()
         front_predictions = interpreter_front.get_tensor(output_details[0]['index'])
@@ -104,12 +116,12 @@ def predict():
 
        
     # Return the product details as a JSON response
-    return jsonify({"confidence": confidence,
-                    "product": product,
-                    "brand": brand,
-                    "thc": thc,
-                    "cbd": cbd,
-                    "strain": strain})
+    return jsonify({"confidence": str(confidence),
+                    "product": str(product),
+                    "brand": str(brand),
+                    "thc": str(thc),
+                    "cbd": str(cbd),
+                    "strain": str(strain)})
     
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

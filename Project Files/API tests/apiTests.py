@@ -4,7 +4,7 @@ import requests
 url = "http://34.227.94.72:5000/predict"
 
 # Read the front and back image files
-front_image = open("mgf.JPG", "rb")
+front_image = open("4.png", "rb")
 back_image = open("mgb.JPG", "rb")
 
 # Define the multipart/form-data fields for the request
