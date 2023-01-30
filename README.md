@@ -9,6 +9,6 @@ Vlog 4: https://youtu.be/0na8mHnmc4k
 ## Folder Directory
 [Docs](Docs/) - All our initial startup docs. Look in here to find out everything you want to know about our project
 
-Project Files - This is all our code. Look in here for a deep dive into what we have done
+[Project Files](Project%20Files/) - This is all our code. Look in here for a deep dive into what we have done
 
-Scrum Docs - All our powerpoints from our various meetups and discussions with the class
+[Scrum Docs](Scrum%20Docs/) - All our powerpoints from our various meetups and discussions with the class
