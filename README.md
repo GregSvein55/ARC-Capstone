@@ -7,7 +7,7 @@ Vlog 3: https://youtu.be/zq65s_DW4d8
 Vlog 4: https://youtu.be/0na8mHnmc4k
 
 ## Folder Directory
-Docs - All our initial startup docs. Look in here to find out everything you want to know about our project
+[Docs](Docs/) - All our initial startup docs. Look in here to find out everything you want to know about our project
 
 Project Files - This is all our code. Look in here for a deep dive into what we have done
 
