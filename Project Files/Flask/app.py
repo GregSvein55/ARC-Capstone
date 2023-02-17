@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS, cross_origin
 import tensorflow as tf
 from PIL import Image
 import numpy as np
@@ -7,6 +8,7 @@ import pytesseract
 import cv2
 
 app = Flask(__name__)
+CORS(app)
 
 #pathToTesseract = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 pathToTesseract = "/usr/bin/tesseract"
@@ -21,6 +23,7 @@ class_labels = df['Product'].unique()
 
 
 @app.route('/predict', methods=['POST'])
+@cross_origin()
 def predict():
     # Load TensorFlow Lite model
     interpreter_front = tf.lite.Interpreter(model_path="ARC_Model_Front_1.tflite")
@@ -84,9 +87,6 @@ def predict():
         
         #resizing image
         front_image = cv2.resize(front_image, (1008, 756))
-        
-        # Normalize the pixel values
-        front_image = front_image / 255.0
         
         #perform inference
         input_data_front = np.array(front_image).reshape(1, 756, 1008, 3).astype(np.float32)

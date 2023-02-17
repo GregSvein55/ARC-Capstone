@@ -1,11 +1,11 @@
 import requests
 
-# Define the URL of your API endpoint
+# Define the URL of the API endpoint
 url = "http://34.227.94.72:5000/predict"
 
 # Read the front and back image files
-front_image = open("4.png", "rb")
-back_image = open("mgb.JPG", "rb")
+front_image = open("gsf.png", "rb")
+back_image = open("gsb.JPG", "rb")
 
 # Define the multipart/form-data fields for the request
 data = {'front_image': front_image, 'back_image': back_image}
