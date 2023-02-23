@@ -1,0 +1,47 @@
+<!--
+/**
+ * Create by: Kevin Baker
+ * Date: 2023-02-14
+ */
+ -->
+<div [hidden]="isHidden">
+  <div (fileDropped)="onFileDropped($event)"
+       [hidden]="!allowImage && !allowVideo"
+       appDnd
+       class="bs-upload-area dark-animation">
+    <form class="bs-upload-form">
+      <img src="/assets/photo.svg"
+           class="bs-upload-icon"
+           alt="photo">
+      <span class="bs-upload-text">
+        <label class="bs-upload-label" for="fileDropRef{{id}}">Upload a File</label> or Drag and Drop</span>
+      <span *ngIf="allowImage && allowVideo" class="bs-upload-text secondary-upload-text">
+         JPG & PNG - MP4 & WAV
+      </span>
+      <span *ngIf="allowImage && !allowVideo" class="bs-upload-text secondary-upload-text">
+         JPG, PNG
+      </span>
+      <span *ngIf="!allowImage && allowVideo" class="bs-upload-text secondary-upload-text">
+         MP4, WAV, WebM
+      </span>
+      <input type="file" #fileDropRef
+             class="bs-file-input"
+             id="fileDropRef{{id}}"
+             name="fileDropRefName{{id}}"
+             multiple
+             [accept]="viewModel.accept"
+             (change)="viewModel.fileBrowseHandler($event.target)">
+    </form>
+  </div>
+  <div [ngStyle]="{ 'padding' : displayList ? '1.25rem 0' : '1rem 0' }"
+       class="bs-upload-list-container">
+    <ul *ngIf="viewModel.files.length > 0 && displayList"
+        class="bs-upload-list">
+      <app-upload-item
+        *ngFor="let item of viewModel.files"
+        [uploadItemInterface]="viewModel"
+        [file]="item">
+      </app-upload-item>
+    </ul>
+  </div>
+</div>

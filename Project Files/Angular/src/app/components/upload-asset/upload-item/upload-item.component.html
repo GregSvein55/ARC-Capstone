@@ -1,0 +1,33 @@
+<!--
+/**
+ * Create by: Kevin Baker
+ * Date: 2023-02-14
+ */
+ -->
+<li class="bs-upload-preview"
+    [class.success]="file?.success"
+    [class.error]="file?.failureError">
+  <video *ngIf="file?.isVideo()"
+         class="bs-upload-preview-image"
+         [loop]="true"
+         [autoplay]="true"
+         [muted]="true"
+         [style.max-height]="'100px'"
+         [controls]="false"
+         [src]="file?.url"
+         [hidden]="false">
+  </video>
+  <div class="bs-upload-preview-text-container">
+    <span class="bs-upload-preview-text-name">
+      {{file?.name}}
+    </span>
+    <span *ngIf="file?.size && !file?.failureError"
+          class="bs-upload-preview-text-size">
+      {{formatBytes(file?.size)}}
+    </span>
+    <span *ngIf="file?.failureError"
+          class="bs-upload-preview-error">
+      {{file?.failureError}}
+    </span>
+  </div>
+</li>

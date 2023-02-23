@@ -1,0 +1,135 @@
+/**
+ * Create by: Kevin Baker
+ * Date: 2023-02-14
+ */
+
+.split-screen {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+
+  @mixin side-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .left-side-header {
+    @include side-header;
+  }
+
+  .right-side-header {
+    @include side-header;
+  }
+
+  @mixin side-header-title {
+    flex: 1;
+  }
+
+  .left-side-header-title {
+    @include side-header-title;
+  }
+
+  .right-side-header-title {
+    @include side-header-title;
+  }
+
+  @mixin common-side {
+    padding: 2rem;
+    flex: 50%;
+    min-height: 100%;
+  }
+
+  .left-side {
+    @include common-side;
+    border-right: 1px solid black;
+  }
+
+  .right-side {
+    @include common-side;
+
+    .pre-container {
+      padding: 1rem 1rem 1rem;
+      border-radius: 1rem;
+      background: black;
+    }
+  }
+
+  .hljs {
+    background: black;
+  }
+
+  pre {
+    margin: 0;
+  }
+
+  .code {
+    white-space: pre-wrap;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+  }
+
+  .image-to-upload {
+    max-height: 30rem;
+  }
+
+  .lottie-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid white;
+    border-radius: 1rem;
+  }
+}
+
+/*
+ * Rainbow Button
+ */
+button {
+  text-decoration: none;
+  color: #FFF;
+  font-style: inherit;
+}
+
+@mixin base-button {
+  font-family: auto, serif;
+  cursor: pointer;
+  position: relative;
+  border-radius: 5px;
+  display: block;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.clear-button {
+  @include base-button;
+  width: 7rem;
+  background-color: darkgray;
+}
+
+.rainbow-button {
+  $rainbow-button-width: 8rem;
+  width: $rainbow-button-width;
+  @include base-button;
+  background-color: #FC4F4F;
+
+  &.loading {
+    background-image: linear-gradient(90deg, #00C0FF 0%, #FFCF00 49%, #FC4F4F 80%, #00C0FF 100%);
+    animation: slidebg 2s linear infinite;
+    cursor: not-allowed;
+  }
+
+  @keyframes slidebg {
+    from { background-position: 0; }
+    to { background-position: $rainbow-button-width; }
+  }
+}
+

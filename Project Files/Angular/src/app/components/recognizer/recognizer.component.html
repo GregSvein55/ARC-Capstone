@@ -1,0 +1,70 @@
+<!--
+/**
+ * Create by: Kevin Baker
+ * Date: 2023-02-14
+ */
+ -->
+<div class="split-screen">
+  <div class="left-side">
+    <div class="left-side-header">
+      <h1 class="left-side-header-title">Front of Package</h1>
+      <button
+         [disabled]="!(viewModel.reset$|async) || (viewModel.uploading$|async)"
+         class="clear-button"
+         [class.loading]="viewModel.uploading$|async"
+         (click)="viewModel.reset()">
+        Reset
+      </button>
+      <button
+         [disabled]="!(viewModel.upload$|async) || (viewModel.uploading$|async)"
+         class="rainbow-button"
+         [class.loading]="viewModel.uploading$|async"
+         (click)="viewModel.uploadImages()">
+        {{viewModel.buttonText$|async}}
+      </button>
+    </div>
+    <app-upload-asset
+      *ngIf="!(viewModel.frontPhoto$|async)"
+      [id]="0"
+      [parentHandler]="this"
+      [allowImage]="true"
+      [allowVideo]="false"
+      [displayList]="false"
+      [maxAssets]="1">
+    </app-upload-asset>
+    <img *ngIf="(viewModel.frontPhoto$|async) as image"
+         alt="front of package"
+         class="image-to-upload"
+         [src]="image?.url">
+    <h1>Back of Package</h1>
+    <app-upload-asset
+      *ngIf="!(viewModel.backPhoto$|async)"
+      [id]="1"
+      [parentHandler]="this"
+      [allowImage]="true"
+      [allowVideo]="false"
+      [displayList]="false"
+      [maxAssets]="1">
+    </app-upload-asset>
+    <img *ngIf="(viewModel.backPhoto$|async) as image"
+         alt="back of package"
+         class="image-to-upload"
+         [src]="image?.url">
+  </div>
+  <div class="right-side">
+    <div class="right-side-header">
+      <h1 class="right-side-header-title">Product Identifier</h1>
+    </div>
+    <ng-container [ngSwitch]="!!(viewModel.response$|async)">
+      <pre *ngSwitchCase="true" class="pre-container">
+        <code class="code" [lineNumbers]="false"
+              [languages]="['TypeScript']"
+              [highlight]="viewModel.response$|async|json">
+        </code>
+      </pre>
+      <div *ngSwitchCase="false" class="lottie-container">
+        <ng-lottie [options]="viewModel.lottieOptions$|async"></ng-lottie>
+      </div>
+    </ng-container>
+  </div>
+</div>

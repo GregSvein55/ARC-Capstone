@@ -1,0 +1,97 @@
+/**
+ * Create by: Kevin Baker
+ * Date: 2023-02-14
+ */
+
+.bs-file-input {
+  display: none;
+}
+
+/* Media_Upload_Start -------------------------------------- */
+.bs-upload-area {
+  border: 1px dashed white;
+  border-radius: 0.625rem;
+  background-color: transparent;
+  width: 100%;
+  min-height: 16rem;
+}
+
+.bs-upload-form {
+  text-align: center;
+}
+
+.bs-upload-icon {
+  height: 3rem;
+  margin: 3rem auto auto;
+  display: block;
+}
+
+.bs-upload-text {
+  display: block;
+  padding-top: 2rem;
+  font-size: 1.7rem;
+  line-height: 2rem;
+}
+
+.bs-upload-label {
+  color: darkgray;
+}
+
+.bs-upload-label:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.secondary-upload-text {
+  padding-top: 1rem;
+  margin-bottom: 3rem;
+}
+
+.bs-file-input {
+  display: none;
+}
+
+.bs-upload-list-container {
+  width: 100%;
+  padding: 2.5rem 0;
+}
+
+.bs-upload-list {
+  list-style: none;
+  padding: 0;
+}
+
+.bs-upload-button {
+  display: none;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.bs-upload-button:focus {
+  outline: none;
+}
+
+.bs-upload-button-icon {
+  height: 2.5rem;
+  background-color: transparent;
+  filter: invert(49%) sepia(8%) saturate(428%) hue-rotate(189deg) brightness(92%) contrast(86%);
+}
+
+.bs-upload-preview.error .bs-remove-upload-button {
+  display: none;
+}
+
+.bs-upload-preview.error .bs-refresh-upload-button {
+  display: inline-block;
+}
+
+.bs-upload-preview.success .bs-remove-upload-button {
+  display: inline-block;
+}
+
+.bs-upload-preview.success .bs-refresh-upload-button {
+  display: none;
+}
+
+/* ---------------------------------------- Media_Upload_End */

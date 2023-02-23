@@ -1,0 +1,64 @@
+/**
+ * Create by: Kevin Baker
+ * Date: 2023-02-14
+ */
+
+.bs-upload-preview {
+  background-color: transparent;
+  border-radius: 2rem;
+  padding: 0;
+  margin: 2rem 0;
+  display: flex;
+}
+
+.bs-upload-preview-image {
+  height: 20rem;
+  width: 20rem;
+  border-radius: 2.4rem;
+  background-color: transparent;
+}
+
+.bs-upload-preview-text-container {
+  display: inline-block;
+  vertical-align: middle;
+  width: 100%;
+  height: fit-content;
+  margin-left: 3rem;
+}
+
+.bs-upload-button-group {
+  margin: auto 6rem;
+  display: flex;
+}
+
+.bs-upload-preview-text-name {
+  display: block;
+  width: 100%;
+  font-size: 2rem;
+  line-height: 4rem;
+  text-align: left;
+  color: white;
+}
+
+.bs-upload-preview-text-size {
+  display: block;
+  width: 100%;
+  font-size: 2rem;
+  line-height: 4rem;
+  color: white;
+}
+
+.bs-upload-preview-error {
+  display: none;
+}
+
+.bs-upload-preview.error .bs-upload-preview-error {
+  display: block;
+}
+
+.bs-upload-preview-error {
+  font-size: 2.5rem;
+  text-align: left;
+  line-height: 4rem;
+  color: red;
+}
