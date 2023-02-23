@@ -1,57 +1,75 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
-import tensorflow as tf
+#import tensorflow as tf
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.image import img_to_array
 from PIL import Image
 import numpy as np
 import pandas as pd
-import pytesseract
-import cv2
+##import pytesseract
+#import cv2
+#import matplotlib.pyplot as plt TEST ONLY
+import os
 
 app = Flask(__name__)
 CORS(app)
 
-#pathToTesseract = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
-pathToTesseract = "/usr/bin/tesseract"
+#pathToTesseract = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe" WINDOWS
+# pathToTesseract = "/usr/bin/tesseract" #LINUX
+# pytesseract.tesseract_cmd = pathToTesseract
+
+# Load the Keras model
+# Model info:
+# This model takes in an image rotated 90 degrees counter-clockwise
+# Height: 1008 pixels, Width: 756 pixels
+# If the image is not to these specifications, the model will be inaccurate
+model = load_model('ARC_Model_Front_3.h5', compile=False)
 
 # Read the CSV file into a DataFrame
-df = pd.read_csv('modelProductList.csv')
+dfModel = pd.read_csv('modelProductList.csv')
+# Read the CSV file into a DataFrame
+#dfAll = pd.read_csv('ARCProductList.csv')
 
 # Get the unique values in the 'Product' column
-class_labels = df['Product'].unique()
-
+class_labels = dfModel['Product'].unique()
 
 
 
 @app.route('/predict', methods=['POST'])
 @cross_origin()
-def predict():
-    # Load TensorFlow Lite model
-    interpreter_front = tf.lite.Interpreter(model_path="ARC_Model_Front_1.tflite")
-    interpreter_front.allocate_tensors()
-    input_details = interpreter_front.get_input_details()
-    output_details = interpreter_front.get_output_details()
+def predict():  
     
    # Get front input data from the request
     front_image = Image.open(request.files['front_image'])
     front_image.save("front_image.png") # save image as png
     front_image = Image.open("front_image.png")
-    #rotate image 270 degrees
-    front_image = front_image.rotate(270)
 
     # Get back input data from the request
     back_image = Image.open(request.files['back_image'])
     back_image.save("back_image.png") # save image as png
     back_image = Image.open("back_image.png")
-    back_image = back_image.rotate(270)
     
-    pytesseract.tesseract_cmd = pathToTesseract
-    text = pytesseract.image_to_string(front_image)
-
-    # Read the CSV file into a DataFrame
-    df = pd.read_csv('ARCProductList.csv')
+    #Differentiate between .jpg and .png files
+    # filename, extension = os.path.splitext(request.files['front_image'].filename)
+    # if extension.lower() in ['.JPG', '.jpg']:
+    #     # Rotating to be able to read the text
+    #     front_image = front_image.rotate(270)
+    #     # plt.imshow(front_image) TEST ONLY
+    #     # plt.show()
+    # elif extension.lower() == '.png':
+    #     # No rotation necesary for .png files
+    #     pass
+    #     # plt.imshow(front_image) TEST ONLY
+    #     # plt.show()
+    # else:
+    #     print("Image type not supported")
+    #     return jsonify('Image type not supported. Please use .JPG or .png')
+    
+    #Scan image for text
+    #text = pytesseract.image_to_string(front_image)
 
     # Split the text into a list of words
-    words = text.split()
+    #words = text.split()
 
     checker = None
     product = None
@@ -62,55 +80,82 @@ def predict():
     strain = None
     
     # Iterate over the words with a sliding window
-    for i in range(len(words)):
-        for j in range(i+1, len(words)+1):
-            checker = " ".join(words[i:j])
-            if df[(df['Product'] == checker)].empty:
-                continue
-            else:
-                # Get the rows where the 'Product' column is equal to the word
-                row = df[(df['Product'] == checker)]
-                confidence = 0.99
-                product = row['Product'].values[0]
-                brand = row['Brand'].values[0]
-                thc = row['THC'].values[0]
-                cbd = row['CBD'].values[0]
-                strain = row['Type'].values[0]
+    # for i in range(len(words)):
+    #     for j in range(i+1, len(words)+1):
+    #         checker = " ".join(words[i:j])
+    #         if dfAll[(dfAll['Product'] == checker)].empty:
+    #             continue
+    #         else:
+    #             # Get the rows where the 'Product' column is equal to the word
+    #             row = dfAll[(dfAll['Product'] == checker)]
+    #             confidence = 99
+    #             product = row['Product'].values[0]
+    #             brand = row['Brand'].values[0]
+    #             thc = row['THC'].values[0]
+    #             cbd = row['CBD'].values[0]
+    #             strain = row['Type'].values[0]
     #END OF OCR CODE   
                  
     if product is None:
+        # Re grab the image from the request
+        front_image = Image.open(request.files['front_image'])
         
-        front_image = cv2.imread("front_image.png")
-        # Images sent to the CNN must be rotated 90 degrees counter-clockwise as
-        # the data set it was trained on was rotated 90 degrees counter-clockwise
-        front_image = cv2.rotate(front_image, cv2.ROTATE_90_COUNTERCLOCKWISE)
+        # Initialize an empty array to store the preprocessed images
+        X_test = np.zeros((1, 1008, 756, 3), dtype=np.float32)
         
-        #resizing image
-        front_image = cv2.resize(front_image, (1008, 756))
+        #Differentiate between .jpg and .png files
+        filename, extension = os.path.splitext(request.files['front_image'].filename)
+        if extension.lower() in ['.JPG', '.jpg']:
+            # Resize the image to 756x1008 pixels 
+            front_image = front_image.resize((756,1008))
+            # plt.imshow(front_image) TEST ONLY
+            # plt.show()
+        elif extension.lower() == '.png':
+            # Resize the image to 1008x756 pixels and rotate it 90 degrees
+            front_image = front_image.resize((1008,756))
+            front_image = front_image.rotate(90, expand=True)
+            # plt.imshow(front_image) TEST ONLY
+            # plt.show()
+        else:
+            print("Image type not supported")
+            return jsonify('Image type not supported. Please use .JPG or .png')
         
-        #perform inference
-        input_data_front = np.array(front_image).reshape(1, 756, 1008, 3).astype(np.float32)
-        interpreter_front.set_tensor(input_details[0]['index'], input_data_front)
-        interpreter_front.invoke()
-        front_predictions = interpreter_front.get_tensor(output_details[0]['index'])
+        # Convert the image to a NumPy array
+        # DO NOT SCALE THE PIXEL VALUES TO [0, 1], AS VALUES ARE ALREADY IN THIS RANGE
+        img_array = img_to_array(front_image)
 
-        # Get the class with the highest probability
-        class_index = np.argmax(front_predictions[0])
-
-        # Get the class label
+        # Add the preprocessed image to the array
+        X_test[0] = img_array
+        
+        # Make predictions on the test images       
+        y_pred = model.predict(X_test, batch_size=1)
+        
+        # Get the predicted class label and confidence
+        class_index = np.argmax(y_pred[0])
         class_label = class_labels[class_index]
+        confidence = y_pred[0][np.argmax(y_pred)]
+        confidence = confidence * 100
+        confidence = round(confidence, 2)
 
-        # Get the probability of the highest class
-        confidence = front_predictions[0][class_index]
-        
         # Get the rows where the 'Product' column is equal to the predicted class label
-        row = df.loc[df['Product'] == class_label]
+        row = dfModel.loc[dfModel['Product'] == class_label]
 
         product = row['Product'].values[0]
         brand = row['Brand'].values[0]
         thc = row['THC'].values[0]
         cbd = row['CBD'].values[0]
         strain = row['Type'].values[0]
+        
+        if confidence >= 100:
+            confidence = 99.99
+        
+        if confidence < 80:
+            class_label = 'Potential New Product'
+            product = 'Unknown'
+            brand = 'Unknown'
+            thc = 'Unknown'
+            cbd = 'Unknown'
+            strain = 'Unknown'
     #END OF ML CODE
 
 

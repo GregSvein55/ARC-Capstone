@@ -1,10 +1,10 @@
 import requests
 
 # Define the URL of the API endpoint
-url = "http://34.227.94.72:5000/predict"
+url = "http://54.226.146.162:5000/predict"
 
 # Read the front and back image files
-front_image = open("gsf.png", "rb")
+front_image = open(r"C:\Users\User1\Desktop\Arc\Project Files\images\3.png", "rb")
 back_image = open("gsb.JPG", "rb")
 
 # Define the multipart/form-data fields for the request

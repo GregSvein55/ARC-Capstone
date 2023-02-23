@@ -1,6 +1,8 @@
 flask
+flask-cors
 tensorflow
 Pillow
 numpy
 pandas
 pytesseract
+os
