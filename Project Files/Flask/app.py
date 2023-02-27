@@ -6,17 +6,18 @@ from tensorflow.keras.preprocessing.image import img_to_array
 from PIL import Image
 import numpy as np
 import pandas as pd
-##import pytesseract
+import pytesseract
 #import cv2
 #import matplotlib.pyplot as plt TEST ONLY
 import os
+import datetime
 
 app = Flask(__name__)
 CORS(app)
 
 #pathToTesseract = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe" WINDOWS
-# pathToTesseract = "/usr/bin/tesseract" #LINUX
-# pytesseract.tesseract_cmd = pathToTesseract
+pathToTesseract = "/usr/bin/tesseract" #LINUX
+pytesseract.tesseract_cmd = pathToTesseract
 
 # Load the Keras model
 # Model info:
@@ -28,7 +29,7 @@ model = load_model('ARC_Model_Front_3.h5', compile=False)
 # Read the CSV file into a DataFrame
 dfModel = pd.read_csv('modelProductList.csv')
 # Read the CSV file into a DataFrame
-#dfAll = pd.read_csv('ARCProductList.csv')
+dfAll = pd.read_csv('ARCProductList.csv')
 
 # Get the unique values in the 'Product' column
 class_labels = dfModel['Product'].unique()
@@ -49,27 +50,27 @@ def predict():
     back_image.save("back_image.png") # save image as png
     back_image = Image.open("back_image.png")
     
-    #Differentiate between .jpg and .png files
-    # filename, extension = os.path.splitext(request.files['front_image'].filename)
-    # if extension.lower() in ['.JPG', '.jpg']:
-    #     # Rotating to be able to read the text
-    #     front_image = front_image.rotate(270)
-    #     # plt.imshow(front_image) TEST ONLY
-    #     # plt.show()
-    # elif extension.lower() == '.png':
-    #     # No rotation necesary for .png files
-    #     pass
-    #     # plt.imshow(front_image) TEST ONLY
-    #     # plt.show()
-    # else:
-    #     print("Image type not supported")
-    #     return jsonify('Image type not supported. Please use .JPG or .png')
+    # Differentiate between .jpg and .png files
+    filename, extension = os.path.splitext(request.files['front_image'].filename)
+    if extension.lower() in ['.JPG', '.jpg']:
+        # Rotating to be able to read the text
+        front_image = front_image.rotate(270)
+        # plt.imshow(front_image) TEST ONLY
+        # plt.show()
+    elif extension.lower() == '.png':
+        # No rotation necesary for .png files
+        pass
+        # plt.imshow(front_image) TEST ONLY
+        # plt.show()
+    else:
+        print("Image type not supported")
+        return jsonify('Image type not supported. Please use .JPG or .png')
     
-    #Scan image for text
-    #text = pytesseract.image_to_string(front_image)
+    # Scan image for text
+    text = pytesseract.image_to_string(front_image)
 
     # Split the text into a list of words
-    #words = text.split()
+    words = text.split()
 
     checker = None
     product = None
@@ -80,20 +81,20 @@ def predict():
     strain = None
     
     # Iterate over the words with a sliding window
-    # for i in range(len(words)):
-    #     for j in range(i+1, len(words)+1):
-    #         checker = " ".join(words[i:j])
-    #         if dfAll[(dfAll['Product'] == checker)].empty:
-    #             continue
-    #         else:
-    #             # Get the rows where the 'Product' column is equal to the word
-    #             row = dfAll[(dfAll['Product'] == checker)]
-    #             confidence = 99
-    #             product = row['Product'].values[0]
-    #             brand = row['Brand'].values[0]
-    #             thc = row['THC'].values[0]
-    #             cbd = row['CBD'].values[0]
-    #             strain = row['Type'].values[0]
+    for i in range(len(words)):
+        for j in range(i+1, len(words)+1):
+            checker = " ".join(words[i:j])
+            if dfAll[(dfAll['Product'] == checker)].empty:
+                continue
+            else:
+                # Get the rows where the 'Product' column is equal to the word
+                row = dfAll[(dfAll['Product'] == checker)]
+                confidence = 99
+                product = row['Product'].values[0]
+                brand = row['Brand'].values[0]
+                thc = row['THC'].values[0]
+                cbd = row['CBD'].values[0]
+                strain = row['Type'].values[0]
     #END OF OCR CODE   
                  
     if product is None:
@@ -119,6 +120,14 @@ def predict():
         else:
             print("Image type not supported")
             return jsonify('Image type not supported. Please use .JPG or .png')
+        
+        
+        
+        curr_datetime = datetime.datetime.now().strftime("%Y%m%d%H%M%S") # get current date and time
+        front_image.save("front_image" + curr_datetime + ".png") # save image as png
+        back_image.save("back_image" + curr_datetime + ".png") # save image as png
+        
+        
         
         # Convert the image to a NumPy array
         # DO NOT SCALE THE PIXEL VALUES TO [0, 1], AS VALUES ARE ALREADY IN THIS RANGE
@@ -151,7 +160,7 @@ def predict():
         
         if confidence < 80:
             class_label = 'Potential New Product'
-            product = 'Unknown'
+            product = 'Potential New Product'
             brand = 'Unknown'
             thc = 'Unknown'
             cbd = 'Unknown'
