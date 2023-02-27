@@ -1,9 +1,5 @@
 # Cannabis Product Recognition
 
-https://user-images.githubusercontent.com/48214072/219201945-3c2bd69f-baa2-4ae6-82af-9f02a205dc93.mov
-
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.1.4
-
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
