@@ -23,7 +23,9 @@ Vlog 5: https://youtu.be/ARxbAjgiUSk
 
 [Scrum Docs](Scrum%20Docs/) - All our powerpoints from our various meetups and discussions with the class
 
+## Startup
 
+Navigate to the Angular directory and run `npm install` to gather all dependancies. Ensure that your version of Node is up to date
 
 ## Development server
 
