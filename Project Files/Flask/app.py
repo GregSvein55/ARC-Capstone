@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from flask_cors import CORS, cross_origin
+#from flask_cors import CORS, cross_origin
 #import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
@@ -13,11 +13,12 @@ import os
 import datetime
 
 app = Flask(__name__)
-CORS(app)
+#CORS(app)
 
-#pathToTesseract = r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe" WINDOWS
-pathToTesseract = "/usr/bin/tesseract" #LINUX
-pytesseract.tesseract_cmd = pathToTesseract
+os.environ['PATH'] += os.pathsep + r'C:\Program Files\Tesseract-OCR' #WINDOWS
+pathToTesseract = r"C:\Program Files\Tesseract-OCR\tesseract.exe" #WINDOWS
+#pathToTesseract = "/usr/bin/tesseract" #LINUX
+
 
 # Load the Keras model
 # Model info:
@@ -34,10 +35,12 @@ dfAll = pd.read_csv('ARCProductList.csv')
 # Get the unique values in the 'Product' column
 class_labels = dfModel['Product'].unique()
 
+print(os.environ.get('PATH'))
+
 
 
 @app.route('/predict', methods=['POST'])
-@cross_origin()
+#@cross_origin()
 def predict():  
     
    # Get front input data from the request
@@ -178,4 +181,5 @@ def predict():
                     "strain": str(strain)})
     
 if __name__ == '__main__':
+    pytesseract.tesseract_cmd = pathToTesseract
     app.run(host='0.0.0.0', debug=True)
