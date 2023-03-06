@@ -1,6 +1,10 @@
 /**
  * Create by: Kevin Baker
  * Date: 2023-02-14
+ *
+ * Modified by: Greg Sveinbjornson
+ * Date: 2023-03-06
+ *
  */
 
 .bs-file-input {
@@ -9,11 +13,10 @@
 
 /* Media_Upload_Start -------------------------------------- */
 .bs-upload-area {
+  background-color: transparent;
   border: 1px dashed white;
   border-radius: 0.625rem;
-  background-color: transparent;
-  width: 100%;
-  min-height: 16rem;
+  height: 30rem;
 }
 
 .bs-upload-form {
@@ -29,6 +32,8 @@
 .bs-upload-text {
   display: block;
   padding-top: 2rem;
+  padding-right: 0.5rem;
+  padding-right: 0.5rem;
   font-size: 1.7rem;
   line-height: 2rem;
 }
@@ -53,7 +58,7 @@
 
 .bs-upload-list-container {
   width: 100%;
-  padding: 2.5rem 0;
+  padding: 2.5rem;
 }
 
 .bs-upload-list {
@@ -93,5 +98,6 @@
 .bs-upload-preview.success .bs-refresh-upload-button {
   display: none;
 }
+
 
 /* ---------------------------------------- Media_Upload_End */

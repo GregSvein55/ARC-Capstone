@@ -2,6 +2,10 @@
 /**
  * Create by: Kevin Baker
  * Date: 2023-02-14
+ *
+ * Modified by: Greg Sveinbjornson
+ * Date: 2023-03-06
+ *
  */
  -->
 <div [hidden]="isHidden">
@@ -33,8 +37,7 @@
              (change)="viewModel.fileBrowseHandler($event.target)">
     </form>
   </div>
-  <div [ngStyle]="{ 'padding' : displayList ? '1.25rem 0' : '1rem 0' }"
-       class="bs-upload-list-container">
+  <div>
     <ul *ngIf="viewModel.files.length > 0 && displayList"
         class="bs-upload-list">
       <app-upload-item

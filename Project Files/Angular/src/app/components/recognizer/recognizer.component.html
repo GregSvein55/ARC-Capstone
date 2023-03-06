@@ -3,57 +3,77 @@
  * Create by: Kevin Baker
  * Date: 2023-02-14
  * 
+ *
  * Modified by: Greg Sveinbjornson
- * Date: 2023-02-25 
+ * Date: 2023-03-06
+ *
 -->
 
+<!-- Left Side -->
 <div class="split-screen">
   <div class="left-side">
-    <div class="left-side-header">
-      <h1 class="left-side-header-title">Front of Package</h1>
-      <button
-         [disabled]="!(viewModel.reset$|async) || (viewModel.uploading$|async)"
-         class="clear-button"
-         [class.loading]="viewModel.uploading$|async"
-         (click)="viewModel.reset()">
-        Reset
-      </button>
-      <button
-         [disabled]="!(viewModel.upload$|async) || (viewModel.uploading$|async)"
-         class="rainbow-button"
-         [class.loading]="viewModel.uploading$|async"
-         (click)="viewModel.uploadImages()">
-        {{viewModel.buttonText$|async}}
-      </button>
+    <div class="upload-grid-container">
+   
+       
+      <h1 class="upload-grid-item">Front of Package</h1>
+      <h1 class="upload-grid-item">Back of Package</h1>
+
+      <div class="upload-grid-item">
+        <app-upload-asset 
+          *ngIf="!(viewModel.frontPhoto$|async)"
+          [id]="0"
+          [parentHandler]="this"
+          [allowImage]="true"
+          [allowVideo]="false"
+          [displayList]="false"
+          [maxAssets]="1">
+        </app-upload-asset>
+        <img *ngIf="(viewModel.frontPhoto$|async) as image"
+            alt="front of package"
+            class="image-to-upload"
+            [src]="image?.url">
+      </div>
+      <div class="upload-grid-item">
+        <app-upload-asset 
+          *ngIf="!(viewModel.backPhoto$|async)"
+          [id]="1"
+          [parentHandler]="this"
+          [allowImage]="true"
+          [allowVideo]="false"
+          [displayList]="false"
+          [maxAssets]="1">
+        </app-upload-asset>
+      
+        <img *ngIf="(viewModel.backPhoto$|async) as image"
+            alt="back of package"
+            class="image-to-upload"
+            [src]="image?.url">
+      </div>
     </div>
-    <app-upload-asset
-      *ngIf="!(viewModel.frontPhoto$|async)"
-      [id]="0"
-      [parentHandler]="this"
-      [allowImage]="true"
-      [allowVideo]="false"
-      [displayList]="false"
-      [maxAssets]="1">
-    </app-upload-asset>
-    <img *ngIf="(viewModel.frontPhoto$|async) as image"
-         alt="front of package"
-         class="image-to-upload"
-         [src]="image?.url">
-    <h1>Back of Package</h1>
-    <app-upload-asset
-      *ngIf="!(viewModel.backPhoto$|async)"
-      [id]="1"
-      [parentHandler]="this"
-      [allowImage]="true"
-      [allowVideo]="false"
-      [displayList]="false"
-      [maxAssets]="1">
-    </app-upload-asset>
-    <img *ngIf="(viewModel.backPhoto$|async) as image"
-         alt="back of package"
-         class="image-to-upload"
-         [src]="image?.url">
+
+    <div class="button-grid-container">
+        <div class="button-grid-item">
+          <button
+            [disabled]="!(viewModel.reset$|async) || (viewModel.uploading$|async)"
+            class="clear-button"
+            [class.loading]="viewModel.uploading$|async"
+            (click)="viewModel.reset()">
+            Reset
+          </button>
+        </div>
+        <div class="button-grid-item">
+          <button
+            [disabled]="!(viewModel.upload$|async) || (viewModel.uploading$|async)"
+            class="rainbow-button"
+            [class.loading]="viewModel.uploading$|async"
+            (click)="viewModel.uploadImages()">
+            {{viewModel.buttonText$|async}}
+          </button>
+        </div>
+   </div>
   </div>
+
+  <!-- Right Side -->
   <div class="right-side">
     <div class="right-side-header">
       <h1 class="right-side-header-title">Product Identifier</h1>

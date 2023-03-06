@@ -1,9 +1,9 @@
 from flask import Flask, jsonify, request
-#from flask_cors import CORS, cross_origin
-#import tensorflow as tf
+from flask_cors import CORS, cross_origin
+import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import img_to_array
-from PIL import Image
+from PIL import Image, ImageFilter
 import numpy as np
 import pandas as pd
 import pytesseract
@@ -11,14 +11,18 @@ import pytesseract
 #import matplotlib.pyplot as plt TEST ONLY
 import os
 import datetime
+import re
+
 
 app = Flask(__name__)
-#CORS(app)
+CORS(app)
 
 os.environ['PATH'] += os.pathsep + r'C:\Program Files\Tesseract-OCR' #WINDOWS
 pathToTesseract = r"C:\Program Files\Tesseract-OCR\tesseract.exe" #WINDOWS
 #pathToTesseract = "/usr/bin/tesseract" #LINUX
 
+# To set Tesseract to English
+config = '-l eng'
 
 # Load the Keras model
 # Model info:
@@ -35,12 +39,15 @@ dfAll = pd.read_csv('ARCProductList.csv')
 # Get the unique values in the 'Product' column
 class_labels = dfModel['Product'].unique()
 
-print(os.environ.get('PATH'))
+# The regular expression pattern to search for a number after 'THC Total' and 'CBD total'
+patternTHC = r"(?i)THC\s+Total\s*:?\s*(\d+(?:\.\d+)?)"
+patternCBD = r"(?i)CBD\s+Total\s*:?\s*(\d+(?:\.\d+)?)"
+
 
 
 
 @app.route('/predict', methods=['POST'])
-#@cross_origin()
+@cross_origin()
 def predict():  
     
    # Get front input data from the request
@@ -69,13 +76,19 @@ def predict():
         print("Image type not supported")
         return jsonify('Image type not supported. Please use .JPG or .png')
     
-    # Scan image for text
-    text = pytesseract.image_to_string(front_image)
+    # Preprocess the front image
+    front_image = front_image.filter(ImageFilter.SHARPEN)
+    front_image = front_image.convert('L')  # convert to grayscale
+    front_image = front_image.resize((front_image.width // 2, front_image.height // 2))  # resize the image
+    
+    # Scan image for text using Tesseract 
+    # Runtime 2-3 seconds
+    text = pytesseract.image_to_string(front_image, config=config)
 
     # Split the text into a list of words
     words = text.split()
 
-    checker = None
+    # Initialize variables
     product = None
     confidence = 0.0
     brand = None
@@ -83,24 +96,68 @@ def predict():
     cbd = None
     strain = None
     
-    # Iterate over the words with a sliding window
+    # Create a dictionary that maps products to their rows in the DataFrame 
+    # Runtime <0.1 seconds
+    product_to_rows = {}
+    for i, row in dfAll.iterrows():
+        product = row['Product']
+        if product not in product_to_rows:
+            product_to_rows[product] = []
+        product_to_rows[product].append(row)
+    
+
+    # GET PRODUCT NAME  
+    # Runtime 0.1 seconds
+    # Iterate over the words with a sliding window and look up the product in the dictionary
     for i in range(len(words)):
         for j in range(i+1, len(words)+1):
-            checker = " ".join(words[i:j])
-            if dfAll[(dfAll['Product'] == checker)].empty:
+            product = " ".join(words[i:j])
+            if product not in product_to_rows:
                 continue
-            else:
-                # Get the rows where the 'Product' column is equal to the word
-                row = dfAll[(dfAll['Product'] == checker)]
-                confidence = 99
-                product = row['Product'].values[0]
-                brand = row['Brand'].values[0]
-                thc = row['THC'].values[0]
-                cbd = row['CBD'].values[0]
-                strain = row['Type'].values[0]
+            rows = product_to_rows[product]
+            for row in rows:
+                confidence = 99.99
+                product = row['Product']
+                brand = row['Brand']
+                thc = row['THC']
+                cbd = row['CBD']
+                strain = row['Type']
+        
+    
+    # GET THC AND CBD VALUES 
+    # Run time <0.1 seconds
+    # Find the number in the text using regular expressions
+    matchTHC = re.search(patternTHC, text)
+    matchCBD = re.search(patternCBD, text)
+
+    # If a number is found, convert it to float, divide by 10, and round to 2 decimal points
+    if matchTHC:
+        
+        thc_total = round(float(matchTHC.group(1)) / 10, 2)
+        
+        if thc_total > 50 or thc_total < 0:# Check twice as the decimal point may be missing
+            thc_total /= 10
+        if thc_total > 50 or thc_total < 0:
+            thc_total /= 10
+            
+        thc = thc_total
+
+        
+    if matchCBD:
+        cbd_total = round(float(matchCBD.group(1)) / 10, 2)
+        
+        if cbd_total > 50 or thc_total < 0:# Check twice as the decimal point may be missing
+            cbd_total /= 10
+        if cbd_total > 50 or thc_total < 0:
+            cbd_total /= 10
+            
+        cbd = cbd_total
+    
+    
+    
     #END OF OCR CODE   
                  
-    if product is None:
+    if product is None or product == "\u2018nada":
         # Re grab the image from the request
         front_image = Image.open(request.files['front_image'])
         
@@ -154,8 +211,10 @@ def predict():
 
         product = row['Product'].values[0]
         brand = row['Brand'].values[0]
-        thc = row['THC'].values[0]
-        cbd = row['CBD'].values[0]
+        if thc is None:
+            thc = row['THC'].values[0]
+        if cbd is None:
+            cbd = row['CBD'].values[0]
         strain = row['Type'].values[0]
         
         if confidence >= 100:
@@ -165,12 +224,15 @@ def predict():
             class_label = 'Potential New Product'
             product = 'Potential New Product'
             brand = 'Unknown'
-            thc = 'Unknown'
-            cbd = 'Unknown'
+            if thc is None:
+                thc = 'Unknown'
+            if cbd is None:
+                cbd = 'Unknown'
             strain = 'Unknown'
     #END OF ML CODE
 
 
+    
        
     # Return the product details as a JSON response
     return jsonify({"confidence": str(confidence),
