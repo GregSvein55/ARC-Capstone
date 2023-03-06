@@ -25,7 +25,7 @@ Vlog 5: https://youtu.be/ARxbAjgiUSk
 
 ## Startup
 
-Navigate to the Angular directory and run `npm install` to gather all dependancies. Ensure that your version of Node is up to date
+Navigate to the Angular directory and run `npm install` to gather all dependancies. Ensure that your version of Node is up to date.
 
 ## Development server
 
