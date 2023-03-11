@@ -29,7 +29,6 @@ export class LocalFile {
     return this.name?.split('.')?.shift();
   }
 
-  // converts the file to a blob
   asBlob(): Blob {
     const stripFileContents = (file: string): string => {
       const newFileContents = file.replace(/^data:image\/\w+;base64,/, '');
@@ -40,7 +39,6 @@ export class LocalFile {
     return new Blob([new Uint8Array(buff)]);
   }
 
-  // converts the file to a file
   asTransferable(): File {
     return new File([this.asBlob()], this.name);
   }

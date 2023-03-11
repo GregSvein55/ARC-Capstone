@@ -23,12 +23,10 @@ export class UploadItemComponent extends BaseComponent {
     super();
   }
 
-  // removes file from upload component
   removeMe(): void {
     this.uploadItemInterface?.removeMe(this.file);
   }
 
-  // formats the file size into kb, mb, gb, etc.
   formatBytes(bytes: number | undefined, decimals = 2) {
     if (bytes === 0) {
       return '0 Bytes';
