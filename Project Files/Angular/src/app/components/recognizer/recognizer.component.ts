@@ -27,6 +27,7 @@ export class RecognizerComponent extends BaseComponent implements UploadImageInt
     super();
   }
 
+  // This function is called when the user selects an image to upload
   fileList(f: LocalFile[], id?: number) {
     if (id === 0) {
       this.viewModel.connectToFrontPhoto(f?.[0]);
@@ -35,6 +36,7 @@ export class RecognizerComponent extends BaseComponent implements UploadImageInt
     }
   }
 
+  // This function is used to format the response from the API
   formatResponse(response: string): string {
     if (!response) {
       return '';

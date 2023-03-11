@@ -12,18 +12,25 @@ import {LocalFile} from '../app/components/upload-asset/local-file';
  * Date: 2023-03-06
  *
  */
+
 @Injectable({ providedIn: 'root' })
 export class RecognitionApi {
 
   constructor(private http: HttpClient) {}
 
+  // This function sends the picture to the API using POST
+  
   public recognize(
     front: LocalFile,
     back: LocalFile,
   ): Observable<string> {
+    
     const formData: FormData = new FormData();
+
     if (front?.originalFile) formData.append('front_image', front?.originalFile, front?.originalFile?.name);
     if (back?.originalFile) formData.append('back_image', back?.originalFile, back?.originalFile.name);
+    
+    // change the IP of the API here if nessesary
     return this.http.post<string>('http://52.207.225.183:5000/predict', formData);
   }
 
