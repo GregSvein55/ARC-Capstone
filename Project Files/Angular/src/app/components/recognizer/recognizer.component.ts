@@ -8,6 +8,11 @@ import {LocalFile} from '../upload-asset/local-file';
 /**
  * Create by: Kevin Baker
  * Date: 2023-02-14
+ * 
+ *  
+ * Modified by: Greg Sveinbjornson
+ * Date: 2023-03-11
+ *
  */
 @Component({
   selector: 'app-recognizer',
@@ -28,6 +33,24 @@ export class RecognizerComponent extends BaseComponent implements UploadImageInt
     } else if (id === 1) {
       this.viewModel.connectToBackPhoto(f?.[0]);
     }
+  }
+
+  formatResponse(response: string): string {
+    if (!response) {
+      return '';
+    }
+    
+    const result = JSON.parse(response);
+    const formattedOutput = `
+      Brand: ${result.brand}
+      Product: ${result.product}
+      THC: ${result.thc}
+      CBD: ${result.cbd}
+      Strain: ${result.strain}
+      Confidence: ${result.confidence}
+    `;
+    
+    return formattedOutput;
   }
 
 }

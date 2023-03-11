@@ -82,7 +82,7 @@
       <pre *ngSwitchCase="true" class="pre-container">
         <code class="code" [lineNumbers]="false"
               [languages]="['TypeScript']"
-              [highlight]="viewModel.response$|async|json">
+              [highlight]="formatResponse(viewModel.response$|async|json)">
         </code>
       </pre>
       <div *ngSwitchCase="false" class="lottie-container">
