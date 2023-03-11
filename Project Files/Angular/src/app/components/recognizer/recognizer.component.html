@@ -14,10 +14,11 @@
   <div class="left-side">
     <div class="upload-grid-container">
    
-       
+       <!-- Titles -->
       <h1 class="upload-grid-item">Front of Package</h1>
       <h1 class="upload-grid-item">Back of Package</h1>
 
+      <!-- Upload Images -->
       <div class="upload-grid-item">
         <app-upload-asset 
           *ngIf="!(viewModel.frontPhoto$|async)"
@@ -51,6 +52,7 @@
       </div>
     </div>
 
+    <!-- Reset and Upload Buttons -->
     <div class="button-grid-container">
         <div class="button-grid-item">
           <button
@@ -78,6 +80,7 @@
     <div class="right-side-header">
       <h1 class="right-side-header-title">Product Identifier</h1>
     </div>
+    <!-- Animation and Response -->
     <ng-container [ngSwitch]="!!(viewModel.response$|async)">
       <pre *ngSwitchCase="true" class="pre-container">
         <code class="code" [lineNumbers]="false"

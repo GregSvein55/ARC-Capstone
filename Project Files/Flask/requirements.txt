@@ -5,4 +5,4 @@ Pillow
 numpy
 pandas
 pytesseract
-os
+datetime

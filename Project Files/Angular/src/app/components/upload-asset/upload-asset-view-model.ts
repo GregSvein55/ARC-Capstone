@@ -62,10 +62,13 @@ export class UploadAssetViewModel extends BaseViewModel implements UploadItemInt
     this.accept = s;
   }
 
+  
+  // Event handler for when a file is selected
   fileBrowseHandler(target: any) {
     this.handleUploadedFiles(target.files);
   }
 
+  // Event handler for when a file is uploaded
   handleUploadedFiles(uploadedFiles: FileList) {
     Array.from(uploadedFiles).forEach(file => {
       // ensure the content type is image or video
@@ -77,6 +80,7 @@ export class UploadAssetViewModel extends BaseViewModel implements UploadItemInt
     });
   }
 
+  // Event handler for when a file is dropped
   private readAsDataUrl(file: File) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -91,6 +95,7 @@ export class UploadAssetViewModel extends BaseViewModel implements UploadItemInt
     };
   }
 
+  // checking file type
   properFileType(f: File): boolean {
     const mimeType = f.type;
     if (mimeType.match(/image\/*/) !== null || mimeType.match(/video\/*/) !== null) {
@@ -171,6 +176,7 @@ export class UploadAssetViewModel extends BaseViewModel implements UploadItemInt
     return f.size > (f.isVideo() ? UploadAssetViewModel.MAX_VIDEO_SIZE : UploadAssetViewModel.MAX_IMG_SIZE);
   }
 
+  // removes file from the list
   removeMe(f: LocalFile) {
     const i = this.files?.indexOf(f);
     if (i >= 0 && (this.files.length) > i) {
@@ -179,6 +185,7 @@ export class UploadAssetViewModel extends BaseViewModel implements UploadItemInt
     this.parentHandler?.fileList(this.files, this.id);
   }
 
+  // removes all files from the list
   clear() {
     this.files = [];
     this.parentHandler?.fileList(this.files, this.id);
