@@ -17,7 +17,7 @@ Vlog 2: https://youtu.be/YPUf_zafUjE
 Vlog 3: https://youtu.be/zq65s_DW4d8  
 Vlog 4: https://youtu.be/0na8mHnmc4k  
 Vlog 5: https://youtu.be/ARxbAjgiUSk  
-Vlog 6: 
+Vlog 6:  
 Commercial: https://youtu.be/JLmXEXmRO4U
 
 
