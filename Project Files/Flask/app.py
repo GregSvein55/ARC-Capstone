@@ -7,8 +7,6 @@ from PIL import Image, ImageFilter
 import numpy as np
 import pandas as pd
 import pytesseract
-#import cv2
-#import matplotlib.pyplot as plt TEST ONLY
 import os
 import datetime
 import re
@@ -16,10 +14,6 @@ import re
 
 app = Flask(__name__)
 CORS(app)
-
-#os.environ['PATH'] += os.pathsep + r'C:\Program Files\Tesseract-OCR' #WINDOWS
-#pathToTesseract = r"C:\Program Files\Tesseract-OCR\tesseract.exe" #WINDOWS
-#pathToTesseract = "/usr/bin/tesseract" # Amazon LINUX
 
 # To set Tesseract to English
 config = '-l eng'
@@ -50,25 +44,16 @@ patternCBD = r"(?i)CBD\s+Total\s*:?\s*(\d+(?:\.\d+)?)"
 @cross_origin()
 def predict():  
     
-    start_time = datetime.datetime.now()
-    
    # Get front input data from the request
     front_image = Image.open(request.files['front_image'])
     front_image.save("front_image.png") # save image as png
     front_image = Image.open("front_image.png")
-
-    interval1 = datetime.datetime.now()
-    time1 = interval1 - start_time
-    print("Time to get front image: ", time1)
 
     # Get back input data from the request
     back_image = Image.open(request.files['back_image'])
     back_image.save("back_image.png") # save image as png
     back_image = Image.open("back_image.png")
     
-    interval2 = datetime.datetime.now()
-    time2 = interval2 - interval1
-    print("Time to get back image: ", time2)
     
     # Differentiate between .jpg and .png files
     filename, extension = os.path.splitext(request.files['front_image'].filename)
@@ -86,33 +71,19 @@ def predict():
         print("Image type not supported")
         return jsonify('Image type not supported. Please use .JPG or .png')
     
-    interval3 = datetime.datetime.now()
-    time3 = interval3 - interval2
-    print("Time to get check jpg/png: ", time3)
     
     # Preprocess the front image
     front_image = front_image.filter(ImageFilter.SHARPEN)
     front_image = front_image.convert('L')  # convert to grayscale
     front_image = front_image.resize((front_image.width // 2, front_image.height // 2))  # resize the image
     
-    interval4 = datetime.datetime.now()
-    time4 = interval4 - interval3
-    print("Time to get preprocess image: ", time4)
     
     # Scan image for text using Tesseract 
     # Runtime 2-3 seconds
     text = pytesseract.image_to_string(front_image, config=config)
 
-    interval5 = datetime.datetime.now()
-    time5 = interval5 - interval4
-    print("Time to use tesseract: ", time5)
-
     # Split the text into a list of words
     words = text.split()
-
-    interval6 = datetime.datetime.now()
-    time6 = interval6 - interval5
-    print("Time to split into list of words: ", time6)
 
     # Initialize variables
     product = None
@@ -150,19 +121,13 @@ def predict():
                 cbd = row['CBD']
                 strain = row['Type']
         
-    interval7 = datetime.datetime.now()
-    time7 = interval7 - interval6
-    print("Time to find priduct in dictionary: ", time7)
     
     # GET THC AND CBD VALUES 
     # Run time <0.1 seconds
     # Find the number in the text using regular expressions
     matchTHC = re.search(patternTHC, text)
     matchCBD = re.search(patternCBD, text)
-    
-    interval8 = datetime.datetime.now()
-    time8 = interval8 - interval7
-    print("Time to regex search: ", time8)
+
 
     # If a number is found, convert it to float, divide by 10, and round to 2 decimal points
     if matchTHC:
@@ -190,9 +155,6 @@ def predict():
             
         cbd = cbd_total
     
-    interval9 = datetime.datetime.now()
-    time9 = interval9 - interval8
-    print("Time to regex search: ", time9)
     
     #END OF OCR CODE   
                  
@@ -208,26 +170,20 @@ def predict():
         if extension.lower() in ['.JPG', '.jpg']:
             # Resize the image to 756x1008 pixels 
             front_image = front_image.resize((756,1008))
-            # plt.imshow(front_image) TEST ONLY
-            # plt.show()
+            
         elif extension.lower() == '.png':
             # Resize the image to 1008x756 pixels and rotate it 90 degrees
             front_image = front_image.resize((1008,756))
             front_image = front_image.rotate(90, expand=True)
-            # plt.imshow(front_image) TEST ONLY
-            # plt.show()
+           
         else:
             print("Image type not supported")
             return jsonify('Image type not supported. Please use .JPG or .png')
         
-        interval10 = datetime.datetime.now()
-        time10 = interval10 - interval9
-        print("Time to get front image for ML: ", time10)
-        
-        #curr_datetime = datetime.datetime.now().strftime("%Y%m%d%H%M%S") # get current date and time
-        #front_image.save("front_image" + curr_datetime + ".png") # save image as png
-        #back_image.save("back_image" + curr_datetime + ".png") # save image as png
-        
+        directory = "/images"
+        curr_datetime = datetime.datetime.now().strftime("%Y%m%d%H%M%S") # get current date and time
+        front_image.save(directory + "front_image" + curr_datetime + ".png") # save image as png
+        back_image.save(directory +"back_image" + curr_datetime + ".png") # save image as png
         
         
         # Convert the image to a NumPy array
@@ -237,16 +193,10 @@ def predict():
         # Add the preprocessed image to the array
         X_test[0] = img_array
         
-        interval11 = datetime.datetime.now() 
-        time11 = interval11 - interval10
-        print("Time to preprocess front image for ML: ", time11)
         
         # Make predictions on the test images       
         y_pred = model.predict(X_test, batch_size=1)
         
-        interval12 = datetime.datetime.now()
-        time12 = interval12 - interval11
-        print("Time to make prediction: ", time12)
         
         # Get the predicted class label and confidence
         class_index = np.argmax(y_pred[0])
@@ -255,9 +205,6 @@ def predict():
         confidence = confidence * 100
         confidence = round(confidence, 2)
         
-        interval13 = datetime.datetime.now()
-        time13 = interval13 - interval12
-        print("Time to get class label: ", time13)
 
         # Get the rows where the 'Product' column is equal to the predicted class label
         row = dfModel.loc[dfModel['Product'] == class_label]
@@ -282,19 +229,13 @@ def predict():
             if cbd is None:
                 cbd = 'Unknown'
             strain = 'Unknown'
-        
-        interval14 = datetime.datetime.now()
-        time14 = interval14 - interval13
-        print("Time to get class label: ", time14)
+
         
     #END OF ML CODE
 
-    interval15 = datetime.datetime.now()
-    time15 = interval15 - start_time
-    print("Total time: ", time15)
        
     # Return the product details as a JSON response
-    return jsonify({"confidence": str(confidence),
+    return jsonify({"confidence": str(confidence) + '%',
                     "product": str(product),
                     "brand": str(brand),
                     "thc": str(thc) + '%',
