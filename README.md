@@ -31,7 +31,7 @@ Commercial: https://youtu.be/JLmXEXmRO4U
 
 ## Startup
 
-Navigate to the Angular directory and run `npm install` to gather all dependancies. Ensure that your version of Node is up to date.
+Navigate to the Angular directory and run `npm install` to gather all dependancies. Ensure that you have Node.js installed and up to date.
 
 ## Development server
 
