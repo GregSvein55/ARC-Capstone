@@ -22,7 +22,7 @@ Commercial: https://youtu.be/JLmXEXmRO4U
 
 
 
-## :file_folder: Folder Directory
+## :ledger: Folder Directory
 [Docs](Docs/) - All our initial startup docs. Look in here to find out everything you want to know about our project
 
 [Project Files](Project%20Files/) - This is all our code. Look in here for a deep dive into what we have done
