@@ -31,7 +31,7 @@ export class RecognitionApi {
     if (back?.originalFile) formData.append('back_image', back?.originalFile, back?.originalFile.name);
     
     // change the IP of the API here if nessesary
-    return this.http.post<string>('http://52.207.225.183:5000/predict', formData);
+    return this.http.post<string>('https://52.207.225.183:5000/predict', formData);
   }
 
 }
