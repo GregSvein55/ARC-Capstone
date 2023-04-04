@@ -2,8 +2,7 @@ import {Subject, Subscription} from 'rxjs';
 import {Injectable, OnDestroy} from '@angular/core';
 
 /**
- * Create by: Kevin Baker
- * Date: 2023-02-14
+ * Base class for all components that need to subscribe to observables.
  *
  * Takes care of destroy lifecycle, so you don't need to add 'implements OnDestroy'.
  * If you need to override ngOnDestroy functionality, just override destroy() function.

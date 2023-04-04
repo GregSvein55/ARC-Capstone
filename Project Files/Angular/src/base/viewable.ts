@@ -1,6 +1,5 @@
 /**
- * Create by: Kevin Baker
- * Date: 2023-02-14
+ * Interface for classes that can be viewed.
  */
 export interface Viewable {
   setupViews(): void;

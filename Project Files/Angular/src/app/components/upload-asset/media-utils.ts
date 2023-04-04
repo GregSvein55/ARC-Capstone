@@ -1,8 +1,7 @@
 import {MediaType} from './media-type.enum';
 
 /**
- * Create by: Kevin Baker
- * Date: 2023-02-14
+ * This class is used to store the file that the user has selected
  */
 export class MediaUtils {
 

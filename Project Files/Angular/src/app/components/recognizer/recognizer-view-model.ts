@@ -1,3 +1,7 @@
+/**
+ * This file contains the logic for the recognizer view, and formatting of the page
+ */
+
 import {Injectable} from '@angular/core';
 import {BaseViewModel} from '../../../base/base-view-model';
 import {BehaviorSubject, combineLatest, distinctUntilChanged, map, of, switchMap, take} from 'rxjs';
@@ -5,14 +9,6 @@ import {LocalFile} from '../upload-asset/local-file';
 import {RecognitionApi} from '../../../api/recognition-api';
 import {AnimationOptions} from 'ngx-lottie';
 
-/**
- * Create by: Kevin Baker
- * Date: 2023-02-14
- * 
- * Modified by: Greg Sveinbjornson
- * Date: 2023-03-11
- * 
- */
 @Injectable()
 export class RecognizerViewModel extends BaseViewModel {
 

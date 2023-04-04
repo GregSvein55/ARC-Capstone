@@ -1,17 +1,12 @@
+/**
+ * This file contains the API connection for the recognition API
+ */
+
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {LocalFile} from '../app/components/upload-asset/local-file';
 
-/**
- * Create by: Kevin Baker
- * Date: 2023-02-14
- * 
- *  
- * Modified by: Greg Sveinbjornson
- * Date: 2023-03-06
- *
- */
 
 @Injectable({ providedIn: 'root' })
 export class RecognitionApi {

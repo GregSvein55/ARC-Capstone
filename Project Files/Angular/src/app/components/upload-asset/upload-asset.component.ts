@@ -4,9 +4,9 @@ import {UploadImageInterface} from './upload-image-interface';
 import {BaseComponent} from '../../../base/base-component';
 
 /**
- * Create by: Kevin Baker
- * Date: 2023-02-14
- *
+ * IMPORTANT: This component is not meant to be used alone, but rather as a child 
+ * component of another component.
+ * 
  * This component allows you to drag and drop files into it, and notify a parent component when files
  * have changes.
  * @param parentHandler: pass your parent component in that implements this interface, so that it

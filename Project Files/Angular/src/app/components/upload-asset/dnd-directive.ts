@@ -1,9 +1,10 @@
+/**
+ * This file contains the directive for the drag and drop functionality
+ */
+
 import {Directive, EventEmitter, HostBinding, HostListener, Output} from '@angular/core';
 
-/**
- * Create by: Kevin Baker
- * Date: 2023-02-14
- */
+
 @Directive({ selector: '[appDnd]' })
 export class DndDirective {
 

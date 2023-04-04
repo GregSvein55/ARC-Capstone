@@ -1,10 +1,10 @@
 // @ts-ignore
 import buffer from 'buffer';
-
 /**
- * Create by: Kevin Baker
- * Date: 2023-02-14
+ * This file is used to store the file that the user has selected
  */
+
+
 export class LocalFile {
   public name: string = '';
   public type: string = '';

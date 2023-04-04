@@ -1,12 +1,14 @@
+/**
+ * This file contains the upload item component, 
+ * which is used to display the file that the user has selected
+ */
+
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {UploadItemInterface} from './upload-item-interface';
 import {LocalFile} from '../local-file';
 import {BaseComponent} from '../../../../base/base-component';
 
-/**
- * Create by: Kevin Baker
- * Date: 2023-02-14
- */
+
 @Component({
   selector: 'app-upload-item',
   templateUrl: './upload-item.component.html',

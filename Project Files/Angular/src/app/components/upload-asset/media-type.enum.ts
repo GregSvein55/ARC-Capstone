@@ -1,6 +1,5 @@
 /**
- * Create by: Kevin Baker
- * Date: 2023-02-14
+ * Enum for media types
  */
 export enum MediaType {
   JPG = 'image/jpg',

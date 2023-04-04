@@ -1,3 +1,7 @@
+/**
+ * This file contains the logic for uploading images
+ */
+
 import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 import {UploadImageInterface} from './upload-image-interface';
@@ -9,10 +13,7 @@ import {FileUtils} from './file-utils';
 import {UploadItemInterface} from './upload-item/upload-item-interface';
 import {BaseViewModel} from '../../../base/base-view-model';
 
-/**
- * Create by: Kevin Baker
- * Date: 2023-02-14
- */
+
 @Injectable()
 export class UploadAssetViewModel extends BaseViewModel implements UploadItemInterface {
 

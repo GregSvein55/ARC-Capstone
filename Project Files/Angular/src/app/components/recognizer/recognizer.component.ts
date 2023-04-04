@@ -1,3 +1,7 @@
+/**
+ * This file contains the recognizer component, as well as the formatting for the response
+ */
+
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {BaseComponent} from '../../../base/base-component';
 import {RecognizerViewModel} from './recognizer-view-model';
@@ -5,15 +9,6 @@ import {UploadImageInterface} from '../upload-asset/upload-image-interface';
 import {LocalFile} from '../upload-asset/local-file';
 
 
-/**
- * Create by: Kevin Baker
- * Date: 2023-02-14
- * 
- *  
- * Modified by: Greg Sveinbjornson
- * Date: 2023-03-11
- *
- */
 @Component({
   selector: 'app-recognizer',
   templateUrl: './recognizer.component.html',

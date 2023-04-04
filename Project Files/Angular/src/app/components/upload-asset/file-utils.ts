@@ -1,10 +1,11 @@
+/**
+ * This file contains the file utils class for handling file validation
+ */
+
 import {MediaType} from './media-type.enum';
 import {LocalFile} from './local-file';
 
-/**
- * Create by: Kevin Baker
- * Date: 2023-02-14
- */
+
 export class FileUtils {
 
   static validMimeType(file: LocalFile, encodedB64: string): boolean {
